@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Porta - Your Gateway to the Web</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      min-height:100vh;
+      transition: background 0.8s ease;
+      background-image:url('porta-1stbg.png');
+      background-size:cover;
+      background-position:center;
+      overflow-x:hidden;
+    }
+    body.vintage {
+      background-image:url('porta-vintage.png');
+      filter:sepia(0.6) contrast(1.2) brightness(0.9);
+    }
+    .container { display:flex; min-height:100vh; }
+    .sidebar {
+      width:80px; background:rgba(255,255,255,0.1);
+      backdrop-filter:blur(10px); border-right:1px solid rgba(255,255,255,0.2);
+      display:flex; flex-direction:column; padding:20px 0;
+      position:fixed; top:0; left:0; height:100vh; z-index:100;
+    }
+    .sidebar-icon {
+      width:60px; height:60px; margin:10px auto;
+      background:rgba(255,255,255,0.1); border-radius:15px;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; transition:all .3s ease; border:1px solid rgba(255,255,255,0.2);
+    }
+    .sidebar-icon:hover { background:rgba(255,255,255,0.2); transform:translateY(-2px);}
+    .sidebar-icon i { font-size:24px; color:white; }
+    .sidebar-icon.active { background:rgba(255,255,255,0.3); }
+    .main {
+      flex:1; margin-left:80px; padding:40px 20px;
+      display:flex; flex-direction:column; align-items:center;
+    }
+    .header { text-align:center; margin-bottom:20px; }
+    .logo {
+      font-size:4rem; color:white; text-shadow:2px 2px 4px rgba(0,0,0,0.3);
+      cursor:pointer; transition:transform .3s ease;
+    }
+    .logo:hover { transform:scale(1.05); }
+    .sub {
+      color:white; font-size:1.2rem; opacity:0.9; margin-top:8px;
+      transition:color .8s ease;
+    }
+    .search-container { margin:30px 0; }
+    .search-box {
+      width:100%; max-width:600px; padding:15px 20px;
+      border:none; border-radius:25px; font-size:16px;
+      background:rgba(255,255,255,0.9); box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    }
+    .content-grid {
+      width:100%; max-width:900px;
+      display:grid; gap:20px;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    }
+    .content-card {
+      background:rgba(255,255,255,0.1); backdrop-filter:blur(10px);
+      border-radius:15px; padding:20px; color:white;
+    }
+    .content-card h3 { margin-bottom:10px; font-size:1.2rem; }
+
+    #weatherPage {
+      display: none;
+      width: 100%;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      color: rgb(255, 255, 255);
+      text-align: center;
+    }
+
+    #backButtonContainer {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #weatherResult {
+      margin-top: 15px;
+      font-size: 1rem;
+    }
+
+    #weatherSearch {
+      margin: 20px 0;
+    }
+
+    #weatherSearch input {
+      padding: 12px 18px;
+      border-radius: 25px;
+      border: none;
+      width: 100%;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.9);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <div class="sidebar-icon" onclick="openWeatherPage()"><i class="fas fa-cloud-sun"></i></div>
+      <div class="sidebar-icon" onclick="showComingSoon('Stocks')"><i class="fas fa-chart-line"></i></div>
+      <div class="sidebar-icon" onclick="showComingSoon('News')"><i class="fas fa-newspaper"></i></div>
+      <div class="sidebar-icon" onclick="showComingSoon('Games')"><i class="fas fa-gamepad"></i></div>
+      <div class="sidebar-icon" onclick="showComingSoon('Sports')"><i class="fas fa-trophy"></i></div>
+      <div class="sidebar-icon" onclick="showComingSoon('Finance')"><i class="fas fa-dollar-sign"></i></div>
+    </div>
+    <div class="main">
+      <div class="header">
+        <h1 class="logo" onclick="toggleVintage()">Porta</h1>
+        <p class="sub">Your Gateway to the Web</p>
+      </div>
+      <div class="search-container">
+        <input class="search-box" type="text" placeholder="Search the web..." onkeypress="handleSearch(event)"/>
+      </div>
+      <div class="content-grid" id="homeContent">
+        <div class="content-card">
+          <h3>💎 Internet's Best Thing Today</h3>
+          <p>No fluff. Just the coolest link, post, or tool on the web right now.</p>
+        </div>
+        <div class="content-card">
+          <h3>💫 Your Daily Escape</h3>
+          <p>A doorway to chill vibes, lo-fi worlds, and dopamine scrolls.</p>
+        </div>
+        <div class="content-card">
+          <h3>🚀 60-Second Genius</h3>
+          <p>One bite of knowledge you’ll remember forever. FAST, SHARP, BRAIN CANDY.</p>
+        </div>
+        <div class="content-card">
+          <h3>🧘‍♀️ Fix My Life</h3>
+          <p>Mental resets, micro-habits, and real human advice that works.</p>
+        </div>
+        <div class="content-card">
+          <h3>🧃 Internet Juice</h3>
+          <p>Memes, drama, trends, and guilty pleasures. Sip it all.</p>
+        </div>
+        <div class="content-card">
+          <h3>🧨 Give Me One Crazy Idea</h3>
+          <p>A bold, punchy, wild idea that shifts how you see the world (or your Monday).</p>
+        </div>
+      </div>
+
+      <!-- Weather Page -->
+      <div id="weatherPage">
+        <h3>🌤 Search Weather by City</h3>
+        <div id="weatherSearch">
+          <input type="text" id="cityInput" placeholder="Enter city name and press Enter" onkeypress="handleCitySearch(event)" />
+        </div>
+        <div id="weatherResult">Search for any city to get current weather info.</div>
+      </div>
+
+      <!-- Back Button (Below and Outside) -->
+      <div id="backButtonContainer">
+        <button onclick="goBackHome()" style="padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer;">
+           Back
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let isVintage = false;
+    const homeContent = document.getElementById('homeContent');
+    const weatherPage = document.getElementById('weatherPage');
+    const backButtonContainer = document.getElementById('backButtonContainer');
+
+    function toggleVintage() {
+      isVintage = !isVintage;
+      document.body.classList.toggle('vintage', isVintage);
+      document.querySelector('.sub').textContent = isVintage ? 'Step Into the Past' : 'Your Gateway to the Web';
+      homeContent.innerHTML = isVintage ? `
+        <div class="content-card"><h3>1. 🏭 1900s: The Industrial Boom</h3><p>Explore how the 20th century began. Machines, cities, world wars, and roaring culture shifts.</p></div>
+        <div class="content-card"><h3>2. ⚔️ 1800s: Age of Revolutions</h3><p>From Napoleon to the birth of photography. Dive into the political and cultural shakeups of the 19th century.</p></div>
+        <div class="content-card"><h3>3. 👑 Famous Rulers & Rebels</h3><p>Meet kings, queens, and revolutionaries who changed history. From Cleopatra to Gandhi.</p></div>
+        <div class="content-card"><h3>4. 🎨 Art Through Time</h3><p>A visual stroll through iconic artworks and styles. Renaissance to Surrealism.</p></div>
+        <div class="content-card"><h3>5. 🧭 Inventions That Changed the World</h3><p>From the printing press to the first computer. Explore breakthroughs that shaped life as we know it.</p></div>
+        <div class="content-card"><h3>6. 🍽️ Food & Fashion in History</h3><p>See what people wore and ate across centuries. Corsets, powdered wigs, ancient feasts, and more.</p></div>
+      ` : originalHTML;
+    }
+
+    const originalHTML = homeContent.innerHTML;
+
+    function openWeatherPage() {
+      homeContent.style.display = 'none';
+      weatherPage.style.display = 'block';
+      backButtonContainer.style.display = 'block';
+    }
+
+    function goBackHome() {
+      weatherPage.style.display = 'none';
+      homeContent.style.display = 'grid';
+      backButtonContainer.style.display = 'none';
+    }
+
+    function handleSearch(e) {
+      if (e.key === 'Enter') {
+        window.open(`https://google.com/search?q=${encodeURIComponent(e.target.value)}`, '_blank');
+        e.target.value = '';
+      }
+    }
+
+    function showComingSoon(f) {
+      alert(`${f} coming soon!`);
+    }
+
+    function handleCitySearch(e) {
+      if (e.key === 'Enter') {
+        const city = e.target.value.trim();
+        if (!city) return;
+
+        document.getElementById('weatherResult').innerHTML = 'Loading...';
+
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}`)
+          .then(res => res.json())
+          .then(data => {
+            if (!data[0]) throw new Error('City not found');
+            const { lat, lon } = data[0];
+
+            return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+              .then(res => res.json())
+              .then(weatherData => {
+                const w = weatherData.current_weather;
+                document.getElementById('weatherResult').innerHTML = `
+                  📍 ${city}<br/>
+                  🌡️ Temperature: ${w.temperature}°C<br/>
+                  💨 Wind Speed: ${w.windspeed} km/h<br/>
+                  🕒 Time: ${w.time}
+                `;
+              });
+          })
+          .catch(() => {
+            document.getElementById('weatherResult').innerHTML = 'Could not fetch weather. Try another city.';
+          });
+
+        e.target.value = '';
+      }
+    }
+  </script>
+</body>
+</html>
